@@ -26,7 +26,7 @@ public class PropertiesProviderImpl implements PropertiesProvider {
 	}
 
 	@Override
-	public String getProperty(String propertyName) {
-		return properties.getProperty(propertyName);
+	public String getProperty(Property property) {
+		return properties.getProperty(property.getPropertyString());
 	}
 }

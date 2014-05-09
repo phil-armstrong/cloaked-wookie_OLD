@@ -4,6 +4,6 @@ public enum Environment {
 	dev;
 
 	public String getPropertiesFile() {
-		return name() + ".properties";
+		return this.name() + ".properties";
 	}
 }

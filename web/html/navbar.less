@@ -1,0 +1,49 @@
+#header-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: @navbarLinkBackgroundColour;
+	border-bottom: @navbarBorderColour 1px solid;
+
+	#header-content {
+		width: @page-width;
+		margin: 0 auto;
+		height: 50px;
+
+		#logo {
+			float: left;
+			width: 100px;
+			height: 20px;
+			margin: 0;
+			padding: 15px;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		nav {
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+
+				li {
+					float: left;
+					width: 50px;
+					height: 20px;
+					margin: 0;
+					padding: 15px;
+					text-align: center;
+
+					&:hover {
+						background-color: @navbarLinkBackgroundColourHover;
+					}
+
+					a {
+					}
+				}
+			}
+		}
+	}
+}

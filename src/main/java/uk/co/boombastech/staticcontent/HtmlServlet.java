@@ -1,7 +1,6 @@
 package uk.co.boombastech.staticcontent;
 
 import uk.co.boombastech.properties.PropertiesProvider;
-import uk.co.boombastech.properties.Property;
 import uk.co.boombastech.system.FileHandler;
 import uk.co.boombastech.utils.guava.GuavaFilesWrapper;
 
@@ -15,17 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static uk.co.boombastech.properties.Property.javascriptPath;
-
 @Singleton
-public class JavascriptServlet extends HttpServlet {
+public class HtmlServlet extends HttpServlet {
 
 	private final PropertiesProvider propertiesProvider;
 	private final FileHandler fileHandler;
 	private final GuavaFilesWrapper guavaWrapper;
 
 	@Inject
-	public JavascriptServlet(PropertiesProvider propertiesProvider, FileHandler fileHandler, GuavaFilesWrapper guavaWrapper) {
+	public HtmlServlet(PropertiesProvider propertiesProvider, FileHandler fileHandler, GuavaFilesWrapper guavaWrapper) {
 		this.propertiesProvider = propertiesProvider;
 		this.fileHandler = fileHandler;
 		this.guavaWrapper = guavaWrapper;
@@ -34,8 +31,7 @@ public class JavascriptServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String requestURI = request.getRequestURI();
-		String fileName = getFilenameFromURI(requestURI);
-		File file = fileHandler.getFile(propertiesProvider.getProperty(javascriptPath), fileName);
+		File file = fileHandler.getFile("web/html", requestURI);
 
 		if (!file.exists()) {
 			response.setStatus(404);
@@ -45,9 +41,5 @@ public class JavascriptServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.append(guavaWrapper.toString(file));
 		writer.flush();
-	}
-
-	private String getFilenameFromURI(String requestURI) {
-		return requestURI.split(propertiesProvider.getProperty(Property.javascriptUrl))[1];
 	}
 }
