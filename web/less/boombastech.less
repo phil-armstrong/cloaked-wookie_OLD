@@ -1,5 +1,18 @@
-@import "../html/navbar";
+@import "navbar";
+@import "variables";
+
+body {
+  margin: 0;
+	background-color: @backgroundColour;
+	padding: @bodyPadding;
+}
 
 h1 {
   color: greenyellow;
+}
+
+#content {
+	height: 1000px;
+	width: @page-width;
+	margin: 0 auto;
 }

@@ -15,7 +15,7 @@ public class PropertiesProviderImpl implements PropertiesProvider {
 	@Inject
 	public PropertiesProviderImpl() {
 		properties = new Properties();
-		Environment environment = Environment.valueOf(System.getProperty("environment"));
+		Environment environment = Environment.valueOf(System.getProperty(Property.environment.getPropertyString(), "dev"));
 
 		try {
 			properties.load(this.getClass().getClassLoader().getResourceAsStream(environment.getPropertiesFile()));

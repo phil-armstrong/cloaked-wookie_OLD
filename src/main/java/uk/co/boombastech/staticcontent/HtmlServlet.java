@@ -19,13 +19,13 @@ public class HtmlServlet extends HttpServlet {
 
 	private final PropertiesProvider propertiesProvider;
 	private final FileHandler fileHandler;
-	private final GuavaFilesWrapper guavaWrapper;
+	private final GuavaFilesWrapper guavaFilesWrapper;
 
 	@Inject
-	public HtmlServlet(PropertiesProvider propertiesProvider, FileHandler fileHandler, GuavaFilesWrapper guavaWrapper) {
+	public HtmlServlet(PropertiesProvider propertiesProvider, FileHandler fileHandler, GuavaFilesWrapper guavaFilesWrapper) {
 		this.propertiesProvider = propertiesProvider;
 		this.fileHandler = fileHandler;
-		this.guavaWrapper = guavaWrapper;
+		this.guavaFilesWrapper = guavaFilesWrapper;
 	}
 
 	@Override
@@ -38,8 +38,10 @@ public class HtmlServlet extends HttpServlet {
 			return;
 		}
 
+		response.setContentType("text/html");
+
 		PrintWriter writer = response.getWriter();
-		writer.append(guavaWrapper.toString(file));
+		writer.append(guavaFilesWrapper.toString(file));
 		writer.flush();
 	}
 }
