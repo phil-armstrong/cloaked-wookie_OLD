@@ -1,7 +1,10 @@
 package uk.co.boombastech.servlets;
 
-import uk.co.boombastech.presenters.Presenter;
-import uk.co.boombastech.wiring.PathManager;
+import uk.co.boombastech.exceptions.UnknownCommandException;
+import uk.co.boombastech.exceptions.UnknownPresenterException;
+import uk.co.boombastech.http.Command;
+import uk.co.boombastech.http.GuicePathManager;
+import uk.co.boombastech.http.Presenter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,19 +17,20 @@ import java.io.IOException;
 @Singleton
 public class PresenterServlet extends HttpServlet {
 
-	private final PathManager pathManager;
+	private final GuicePathManager pathManager;
 
 	@Inject
-	public PresenterServlet(PathManager pathManager) {
+	public PresenterServlet(GuicePathManager pathManager) {
 		this.pathManager = pathManager;
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Presenter presenter = pathManager.getPresenterForRequest(request);
-
-		if (presenter == null) {
-			throw new RuntimeException("Can't find valid presenter");
+		Presenter presenter;
+		try {
+			presenter = pathManager.getPresenterForRequest(request);
+		} catch (UnknownPresenterException e) {
+			presenter = pathManager.getErrorPresenter();
 		}
 
 		presenter.execute(request, response);
@@ -34,6 +38,11 @@ public class PresenterServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doPost(request, response);
+		try {
+			Command command = pathManager.getCommandForRequest(request);
+			command.execute(request, response);
+		} catch (UnknownCommandException e) {
+			pathManager.getErrorPresenter();
+		}
 	}
 }
