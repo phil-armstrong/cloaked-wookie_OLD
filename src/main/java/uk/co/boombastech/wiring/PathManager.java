@@ -1,6 +1,7 @@
 package uk.co.boombastech.wiring;
 
 import com.google.inject.Injector;
+import uk.co.boombastech.presenters.InvalidUrlException;
 import uk.co.boombastech.presenters.Presenter;
 import uk.co.boombastech.uris.UriFor;
 
@@ -18,7 +19,7 @@ public class PathManager {
 		this.injector = injector;
 	}
 
-	public Presenter getPresenterForRequest(HttpServletRequest request) {
+	public Presenter getPresenterForRequest(HttpServletRequest request) throws InvalidUrlException {
 		UriFor uriFor = UriFor.getUriForFromRequest(request);
 		return injector.getInstance(uriFor.getPresenterClass());
 	}

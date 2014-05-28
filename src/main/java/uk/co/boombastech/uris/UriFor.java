@@ -1,5 +1,6 @@
 package uk.co.boombastech.uris;
 
+import uk.co.boombastech.presenters.InvalidUrlException;
 import uk.co.boombastech.presenters.Presenter;
 import uk.co.boombastech.presenters.PrototypePresenter;
 
@@ -25,12 +26,12 @@ public enum UriFor {
 		return presenterClass;
 	}
 
-	public static UriFor getUriForFromRequest(HttpServletRequest request) {
+	public static UriFor getUriForFromRequest(HttpServletRequest request) throws InvalidUrlException {
 		for (UriFor uriFor : UriFor.values()) {
 			if (uriFor.url.equalsIgnoreCase(request.getRequestURI())) {
 				return uriFor;
 			}
 		}
-		return null;
+		throw new InvalidUrlException();
 	}
 }

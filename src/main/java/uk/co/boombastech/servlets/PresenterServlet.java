@@ -1,5 +1,6 @@
 package uk.co.boombastech.servlets;
 
+import uk.co.boombastech.presenters.InvalidUrlException;
 import uk.co.boombastech.presenters.Presenter;
 import uk.co.boombastech.wiring.PathManager;
 
@@ -23,13 +24,12 @@ public class PresenterServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Presenter presenter = pathManager.getPresenterForRequest(request);
-
-		if (presenter == null) {
-			throw new RuntimeException("Can't find valid presenter");
+		try {
+			Presenter presenter = pathManager.getPresenterForRequest(request);
+			presenter.execute(request, response);
+		} catch (InvalidUrlException e) {
+			e.printStackTrace();
 		}
-
-		presenter.execute(request, response);
 	}
 
 	@Override
