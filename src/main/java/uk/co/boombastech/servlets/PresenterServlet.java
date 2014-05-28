@@ -2,9 +2,12 @@ package uk.co.boombastech.servlets;
 
 import uk.co.boombastech.exceptions.UnknownCommandException;
 import uk.co.boombastech.exceptions.UnknownPresenterException;
+import uk.co.boombastech.exceptions.UnknownUriException;
 import uk.co.boombastech.http.Command;
-import uk.co.boombastech.http.GuicePathManager;
+import uk.co.boombastech.http.PathManager;
 import uk.co.boombastech.http.Presenter;
+import uk.co.boombastech.templating.Template;
+import uk.co.boombastech.templating.TemplateManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,11 +20,13 @@ import java.io.IOException;
 @Singleton
 public class PresenterServlet extends HttpServlet {
 
-	private final GuicePathManager pathManager;
+	private final PathManager pathManager;
+	private final TemplateManager templateManager;
 
 	@Inject
-	public PresenterServlet(GuicePathManager pathManager) {
+	public PresenterServlet(PathManager pathManager, TemplateManager templateManager) {
 		this.pathManager = pathManager;
+		this.templateManager = templateManager;
 	}
 
 	@Override
@@ -29,9 +34,13 @@ public class PresenterServlet extends HttpServlet {
 		Presenter presenter;
 		try {
 			presenter = pathManager.getPresenterForRequest(request);
-		} catch (UnknownPresenterException e) {
+		} catch (UnknownPresenterException unknownPresenterException) {
+			presenter = pathManager.getErrorPresenter();
+		} catch (UnknownUriException unknownUriException) {
 			presenter = pathManager.getErrorPresenter();
 		}
+		Template template = presenter.execute(request, response);
+		templateManager.doTemplate(template, response);
 	}
 
 	@Override
@@ -39,8 +48,10 @@ public class PresenterServlet extends HttpServlet {
 		try {
 			Command command = pathManager.getCommandForRequest(request);
 			command.execute(request, response);
-		} catch (UnknownCommandException e) {
-			pathManager.getErrorPresenter();
+		} catch (UnknownCommandException unknownPresenterException) {
+			response.sendError(404);
+		} catch (UnknownUriException unknownUriException) {
+			response.sendError(404);
 		}
 	}
 }

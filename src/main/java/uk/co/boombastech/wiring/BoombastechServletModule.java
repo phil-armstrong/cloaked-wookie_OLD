@@ -2,16 +2,20 @@ package uk.co.boombastech.wiring;
 
 import com.google.inject.servlet.ServletModule;
 import uk.co.boombastech.http.GuicePathManager;
+import uk.co.boombastech.http.PathManager;
 import uk.co.boombastech.properties.PropertiesModule;
 import uk.co.boombastech.servlets.PresenterServlet;
 import uk.co.boombastech.staticcontent.JavascriptServlet;
 import uk.co.boombastech.staticcontent.LessServlet;
 import uk.co.boombastech.system.SystemModule;
+import uk.co.boombastech.templating.FreemarkerTemplateManager;
+import uk.co.boombastech.templating.TemplateManager;
 
 public class BoombastechServletModule extends ServletModule {
 	@Override
 	protected void configureServlets() {
-		bind(GuicePathManager.class);
+		bind(PathManager.class).to(GuicePathManager.class);
+		bind(TemplateManager.class).to(FreemarkerTemplateManager.class);
 		install(new PropertiesModule());
 		install(new SystemModule());
 		serve("/static/css/main.css").with(LessServlet.class);

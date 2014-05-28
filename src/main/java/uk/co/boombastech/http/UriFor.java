@@ -2,13 +2,14 @@ package uk.co.boombastech.http;
 
 import uk.co.boombastech.exceptions.UnknownCommandException;
 import uk.co.boombastech.exceptions.UnknownPresenterException;
+import uk.co.boombastech.exceptions.UnknownUriException;
 import uk.co.boombastech.presenters.PrototypePresenter;
 
 import javax.servlet.http.HttpServletRequest;
 
 public enum UriFor {
 	homepage("/", PrototypePresenter.class),
-    login("account/login", null, null)
+    login("account/login", null, null),
 	;
 
 	private final String url;
@@ -38,18 +39,18 @@ public enum UriFor {
     }
 
     public Class<? extends Presenter> getPresenterClass() throws UnknownPresenterException {
-        if (commandClass == null) {
+        if (presenterClass == null) {
             throw new UnknownPresenterException(this);
         }
 		return presenterClass;
 	}
 
-	public static UriFor getUriForFromRequest(HttpServletRequest request) {
+	public static UriFor getUriForFromRequest(HttpServletRequest request) throws UnknownUriException {
 		for (UriFor uriFor : UriFor.values()) {
 			if (uriFor.url.equalsIgnoreCase(request.getRequestURI())) {
 				return uriFor;
 			}
 		}
-		return null;
+		throw new UnknownUriException(request.getRequestURI());
 	}
 }
