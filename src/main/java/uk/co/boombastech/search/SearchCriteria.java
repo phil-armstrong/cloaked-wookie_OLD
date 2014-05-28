@@ -7,6 +7,6 @@ public class SearchCriteria {
 	private final Map<String,String> criterion;
 
 	public SearchCriteria() {
-		criterion = new HashMap<>();
+		criterion = new HashMap<String, String>();
 	}
 }
