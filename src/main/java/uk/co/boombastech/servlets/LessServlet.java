@@ -1,4 +1,4 @@
-package uk.co.boombastech.staticcontent;
+package uk.co.boombastech.servlets;
 
 import org.lesscss.LessCompiler;
 import org.lesscss.LessException;

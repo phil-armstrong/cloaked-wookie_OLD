@@ -3,9 +3,7 @@ package uk.co.boombastech.servlets;
 import uk.co.boombastech.exceptions.UnknownCommandException;
 import uk.co.boombastech.exceptions.UnknownPresenterException;
 import uk.co.boombastech.exceptions.UnknownUriException;
-import uk.co.boombastech.http.Command;
-import uk.co.boombastech.http.PathManager;
-import uk.co.boombastech.http.Presenter;
+import uk.co.boombastech.http.*;
 import uk.co.boombastech.templating.Template;
 import uk.co.boombastech.templating.TemplateManager;
 
@@ -30,17 +28,21 @@ public class PresenterServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
 		Presenter presenter;
 		try {
-			presenter = pathManager.getPresenterForRequest(request);
+			presenter = pathManager.getPresenterForRequest(httpServletRequest);
 		} catch (UnknownPresenterException unknownPresenterException) {
 			presenter = pathManager.getErrorPresenter();
 		} catch (UnknownUriException unknownUriException) {
 			presenter = pathManager.getErrorPresenter();
 		}
+
+		Request request = new Request() {};
+		Response response = new Response() {};
+
 		Template template = presenter.execute(request, response);
-		templateManager.doTemplate(template, response);
+		templateManager.doTemplate(template, httpServletResponse);
 	}
 
 	@Override

@@ -13,10 +13,10 @@ public class FreemarkerTemplate implements Template {
 		properties = newHashMap();
 	}
 
-
 	@Override
-	public void withProperty(TemplateKey key, String value) {
+	public FreemarkerTemplate withProperty(TemplateKey key, String value) {
 		properties.put(key.name(), value);
+		return this;
 	}
 
 	@Override
